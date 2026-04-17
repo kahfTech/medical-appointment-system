@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}My Appointments - MedApp{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <h2 class="mb-4 text-center">My Appointments</h2>
+
+            {% if appointments %}
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Doctor</th>
+                                <th>Specialty</th>
+                                <th>Status</th>
+                                <th>Notes</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for appointment in appointments %}
+                            <tr>
+                                <td>{{ appointment.date }}</td>
+                                <td>{{ appointment.time }}</td>
+                                <td>{{ appointment.doctor.profile.user.username }}</td>
+                                <td>{{ appointment.doctor.specialization }}</td>
+                                <td><span class="badge bg-{{ appointment.status|lower }}">{{ appointment.status }}</span></td>
+                                <td>{{ appointment.notes|default:"—" }}</td>
+                                <td>
+                                    <span class="badge bg-warning fs-6">Pending - Contact Admin to Cancel</span>
+
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="bi bi-calendar-x fs-1 text-muted mb-3"></i>
+                    <p class="lead text-muted">You have no appointments booked.</p>
+                </div>
+            {% endif %}
+
+            <div class="text-center mt-5">
+                <a href="{% url 'book_appointment' %}" class="btn btn-primary btn-lg me-3"><i class="bi bi-calendar-plus"></i> Book New</a>
+                <a href="{% url 'home' %}" class="btn btn-outline-secondary btn-lg"><i class="bi bi-house"></i> Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
