@@ -6,39 +6,63 @@ def create_doctors(apps, schema_editor):
     Doctor = apps.get_model('appointments', 'Doctor')
 
     doctors_data = [
-        ("dr1", "Cardiologist"),
-        ("dr2", "Dentist"),
-        ("dr3", "Neurologist"),
-        ("dr4", "Pediatrician"),
-        ("dr5", "Dermatologist"),
-        ("dr6", "Orthopedist"),
-        ("dr7", "Psychiatrist"),
-        ("dr8", "Ophthalmologist"),
-        ("dr9", "Gastroenterologist"),
-        ("dr10", "Urologist"),
-        ("dr11", "Cardiology"),
-        ("dr12", "Neurology"),
+        ("dr_smith", "Cardiologist"),
+        ("dr_johnson", "Dentist"),
+        ("dr_emily", "Neurologist"),
+        ("dr_peter", "Pediatrician"),
+        ("dr_sarah", "Dermatologist"),
+        ("dr_adam", "Orthopedist"),
+        ("dr_ben", "Psychiatrist"),
+        ("dr_kate", "Ophthalmologist"),
+        ("dr_james", "Gastroenterologist"),
+        ("dr_steve", "Urologist"),
+        ("dr_lisa", "Cardiology"),
+        ("dr_mike", "Neurology"),
     ]
 
     for username, specialization in doctors_data:
-        if not User.objects.filter(username=username).exists():
 
-            user = User.objects.create_user(
-                username=username,
-                password="password123"
-            )
+        user, _ = User.objects.get_or_create(username=username)
 
-            profile = Profile.objects.create(
-                user=user,
-                role="doctor"
-            )
+        profile, _ = Profile.objects.get_or_create(
+            user=user,
+            defaults={"role": "doctor"}
+        )
 
-            Doctor.objects.create(
-                profile=profile,
-                specialization=specialization,
-                avatar="https://ui-avatars.com/api/?name=Doctor",
-                availability={}
-            )
+        Doctor.objects.get_or_create(
+            profile=profile,
+            defaults={
+                "specialization": specialization,
+                "availability": {}
+            }
+        )
+
+def reverse_func(apps, schema_editor):
+    User = apps.get_model('auth', 'User')
+    Profile = apps.get_model('appointments', 'Profile')
+    Doctor = apps.get_model('appointments', 'Doctor')
+
+    for username, _ in [
+        ("dr_smith", ""),
+        ("dr_johnson", ""),
+        ("dr_emily", ""),
+        ("dr_peter", ""),
+        ("dr_sarah", ""),
+        ("dr_adam", ""),
+        ("dr_ben", ""),
+        ("dr_kate", ""),
+        ("dr_james", ""),
+        ("dr_steve", ""),
+        ("dr_lisa", ""),
+        ("dr_mike", ""),
+    ]:
+        user = User.objects.filter(username=username).first()
+        if user:
+            profile = Profile.objects.filter(user=user).first()
+            if profile:
+                Doctor.objects.filter(profile=profile).delete()
+                profile.delete()
+            user.delete()
 
 class Migration(migrations.Migration):
 
@@ -47,5 +71,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(create_doctors),
+        migrations.RunPython(create_doctors, reverse_func),
     ]
