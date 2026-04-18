@@ -1,13 +1,14 @@
-# Deployment Fix Plan Progress
+# Render Deploy Fix Progress
 
-## Plan Steps:
-- [x] 1. User approved plan
-- [x] 2. Rewrite medical_system/settings.py
-- [x] 3. Rewrite requirements.txt
-- [x] 4. Test locally: pip install -r requirements.txt
-- [x] 5. Test: python manage.py collectstatic --noinput --dry-run
-- [x] 6. Test: python manage.py migrate
-- [x] 7. Ready for Render deploy (set env vars: SECRET_KEY, DEBUG=False)
+## Render Error: psycopg-binary==3.2.1 not available on Python 3.14 (Render default ignoring runtime.txt?)
 
-**All local tests passed! Project is production-ready for Render.**
+**Next Steps (Updated):**
+- [x] Previous local tests
+- [ ] 1. Fix requirements.txt: psycopg[binary]==3.2.12 (available wheel)
+- [ ] 2. Update runtime.txt: python-3.12.7 (stable, wheel support)
+- [ ] 3. git add . && git commit -m "Fix psycopg Python 3.12" && git push
+- [ ] 4. Render: Set env PYTHON_VERSION=3.12.7 + SECRET_KEY + DEBUG=False
+- [ ] 5. Manual deploy "latest commit"
+
+**Run locally first:** python manage.py migrate (Postgres needs DATABASE_URL env for full test)
 
