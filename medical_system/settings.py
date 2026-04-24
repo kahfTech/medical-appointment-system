@@ -11,7 +11,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-change-me-in-production!!')
 DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
+ALLOWED_HOSTS = [
+    "medical-appointment-system.onrender.com",
+    "localhost",
+    "127.0.0.1"
+]
 
 # APPS
 INSTALLED_APPS = [
@@ -117,7 +121,7 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://*.onrender.com"
+    "https://medical-appointment-system.onrender.com"
 ]
 
 # LOGGING
