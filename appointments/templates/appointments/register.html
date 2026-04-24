@@ -1,39 +1,117 @@
 {% extends 'base.html' %}
 
 {% block title %}Register - MedApp{% endblock %}
+
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-lg-6 col-xl-5">
         <div class="card shadow-lg border-0">
             <div class="card-body p-5">
+
                 <h2 class="text-center mb-4">Create Account</h2>
-                <form method="post">
+
+                <!-- 🔥 FIXED FORM -->
+                <form method="post" autocomplete="off">
                     {% csrf_token %}
+
+                    <!-- 🔥 Hidden fake fields (blocks browser autofill) -->
+                    <input type="text" name="fakeuser" style="display:none">
+                    <input type="password" name="fakepass" style="display:none">
+
+                    <!-- Username -->
                     <div class="mb-3">
-                        <label class="form-label fw-bold"><i class="bi bi-person me-2"></i>Username</label>
-                        <input type="text" name="username" class="form-control" placeholder="Enter username" required>
+                        <label class="form-label fw-bold">Full Name</label>
+                        <input 
+                            type="text" 
+                            name="username" 
+                            class="form-control" 
+                            placeholder="e.g. Ade Johnson"  
+                            autocomplete="new-username"
+                            required
+                        >
+                        <small class="text-muted">Enter your name</small>
                     </div>
+
+                    <!-- Email -->
                     <div class="mb-3">
-                        <label class="form-label fw-bold"><i class="bi bi-envelope me-2"></i>Email</label>
-                        <input type="email" name="email" class="form-control" placeholder="Enter email (optional)">
+                        <label class="form-label fw-bold">Email</label>
+                        <input 
+                            type="email" 
+                            name="email" 
+                            class="form-control" 
+                            placeholder="example@email.com"  
+                            autocomplete="new-email"
+                            required
+                        >
                     </div>
+
+                    <!-- Phone -->
                     <div class="mb-3">
-                        <label class="form-label fw-bold"><i class="bi bi-telephone me-2"></i>Phone</label>
-                        <input type="tel" name="phone" class="form-control" placeholder="Enter phone" required>
+                        <label class="form-label fw-bold">Phone</label>
+                        <input 
+                            type="tel" 
+                            name="phone" 
+                            class="form-control" 
+                            placeholder="08012345678"
+                            pattern="[0-9+ ]{10,15}"
+                            required
+                        >
                     </div>
+
+                    <!-- Account Type -->
                     <div class="mb-3">
-                        <label class="form-label fw-bold"><i class="bi bi-lock me-2"></i>Password</label>
-                        <input type="password" name="password" class="form-control" placeholder="Enter password" required>
+                        <label class="form-label fw-bold">Account Type</label>
+                        <select name="role" class="form-select" required>
+                            <option value="patient">Patient</option>
+                            <option value="doctor">Doctor</option>
+                        </select>
+                        <small class="text-muted">Select Doctor if you are medical staff</small>
                     </div>
-                    <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">
-                        <i class="bi bi-check-lg me-2"></i>Register
-                    </button>
+
+                    <!-- Password -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Password</label>
+                        <input 
+                            type="password" 
+                            name="password" 
+                            class="form-control" 
+                            placeholder="Enter password" 
+                            autocomplete="new-password"
+                            required
+                        >
+                    </div>
+
+                   <button type="submit" id="registerBtn" class="btn btn-primary w-100 py-2 fw-bold">
+                        <span id="btnText">Register</span>
+                         <span id="btnLoader" class="spinner-border spinner-border-sm ms-2 d-none" role="status"></span>
+                   </button>
                 </form>
+
                 <div class="text-center mt-4">
-                    <p>Already have an account? <a href="{% url 'login' %}" class="text-decoration-none fw-bold">Login here</a></p>
+                    <p>Already have an account? 
+                        <a href="{% url 'login' %}" class="text-decoration-none fw-bold">
+                            Login here
+                        </a>
+                    </p>
                 </div>
+
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector("form");
+        const button = document.getElementById("registerBtn");
+        const btnText = document.getElementById("btnText");
+        const loader = document.getElementById("btnLoader");
+
+        form.addEventListener("submit", function () {
+            button.disabled = true;
+            btnText.textContent = "Processing...";
+            loader.classList.remove("d-none");
+        });
+    });
+</script>
 {% endblock %}

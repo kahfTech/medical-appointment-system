@@ -1,15 +1,42 @@
-
-# Register your models here.
-
 from django.contrib import admin
-from .models import Profile, Doctor, Patient, Appointment
+from django.utils.html import format_html
+from .models import Profile, Doctor, Patient, Appointment, Booking
 
+
+@admin.register(Profile)
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'role', 'is_verified', 'created_at')
+    list_filter = ('role',)
+
+
+@admin.register(Doctor)
+class DoctorAdmin(admin.ModelAdmin):
+    list_display = ('get_username', 'specialization', 'get_avatar')
+
+    def get_username(self, obj):
+        return obj.profile.user.username
+
+    def get_avatar(self, obj):
+        if obj.avatar:
+            return format_html('<img src="{}" width="50" height="50" style="border-radius:50%"/>', obj.avatar.url)
+        return "No Image"
+
+
+@admin.register(Patient)
+class PatientAdmin(admin.ModelAdmin):
+    list_display = ('get_username', 'phone')
+
+    def get_username(self, obj):
+        return obj.profile.user.username
+
+
+@admin.register(Appointment)
 class AppointmentAdmin(admin.ModelAdmin):
     list_display = ('patient', 'doctor', 'date', 'time', 'status')
     list_filter = ('status', 'doctor')
     list_editable = ('status',)
 
-admin.site.register(Profile)
-admin.site.register(Doctor)
-admin.site.register(Patient)
-admin.site.register(Appointment, AppointmentAdmin)
+
+@admin.register(Booking)
+class BookingAdmin(admin.ModelAdmin):
+    list_display = ('user', 'appointment', 'amount', 'created_at')

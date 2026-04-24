@@ -1,29 +1,49 @@
 {% extends 'base.html' %}
 
 {% block title %}Login - MedApp{% endblock %}
+
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-lg-6 col-xl-5">
         <div class="card shadow-lg border-0">
             <div class="card-body p-5">
+
                 <h2 class="text-center mb-4">Welcome Back</h2>
+
                 <form method="post">
                     {% csrf_token %}
+
+                    <!-- EMAIL LOGIN -->
                     <div class="mb-3">
-                        <label class="form-label fw-bold"><i class="bi bi-person me-2"></i>Username</label>
-                        <input type="text" name="username" class="form-control" placeholder="Enter username" required>
+                        <label class="form-label fw-bold">
+                            <i class="bi bi-envelope me-2"></i>Email
+                        </label>
+                        <input type="email" name="email" class="form-control"
+                               placeholder="Enter email" required>
                     </div>
+
+                    <!-- PASSWORD -->
                     <div class="mb-3">
-                        <label class="form-label fw-bold"><i class="bi bi-lock me-2"></i>Password</label>
-                        <input type="password" name="password" class="form-control" placeholder="Enter password" required>
+                        <label class="form-label fw-bold">
+                            <i class="bi bi-lock me-2"></i>Password
+                        </label>
+                        <input type="password" name="password" class="form-control"
+                               placeholder="Enter password" required>
                     </div>
+
                     <button type="submit" class="btn btn-success w-100 py-2 fw-bold">
                         <i class="bi bi-box-arrow-in-right me-2"></i>Login
                     </button>
                 </form>
+
                 <div class="text-center mt-4">
-                    <p>New? <a href="{% url 'register' %}" class="text-decoration-none fw-bold">Create account</a></p>
+                    <p>New? 
+                        <a href="{% url 'register' %}" class="text-decoration-none fw-bold">
+                            Create account
+                        </a>
+                    </p>
                 </div>
+
             </div>
         </div>
     </div>

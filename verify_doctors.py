@@ -1,0 +1,1 @@
+from appointments.models import Doctor, Profile&#10;print("Total Doctors:", Doctor.objects.count())&#10;for doctor in Doctor.objects.all()[:3]:  # First 3&#10;    print(f"- {doctor.profile.user.username}: {doctor.specialization}")&#10;print("✅ Doctors seeded successfully!")

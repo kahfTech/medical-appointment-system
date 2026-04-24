@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 
+
 class Profile(models.Model):
     ROLE_CHOICES = [
         ('patient', 'Patient'),
@@ -16,21 +17,29 @@ class Profile(models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.get_role_display()}"
 
+
 class Doctor(models.Model):
-    profile = models.OneToOneField(Profile, on_delete=models.CASCADE, limit_choices_to={'role': 'doctor'})
+    profile = models.OneToOneField(
+        Profile,
+        on_delete=models.CASCADE,
+        limit_choices_to={'role': 'doctor'}
+    )
     specialization = models.CharField(max_length=100)
-    avatar = models.ImageField(upload_to='doctors/', blank=True, null=True, default='https://ui-avatars.com/api/?name=Doctor&size=256&background=4f46e5&color=fff')
-    availability = models.JSONField(default=dict, blank=True)  # e.g. {'monday': ['09:00-12:00', '14:00-18:00']}
+    avatar = models.ImageField(upload_to='doctors/', blank=True, null=True)
+    availability = models.JSONField(default=dict, blank=True)
 
     def __str__(self):
-        return self.profile.user.username
+        # Display nicely as Dr Name
+        return f"Dr {self.profile.user.username.title()}"
+
 
 class Patient(models.Model):
-    profile = models.OneToOneField(Profile, on_delete=models.CASCADE, limit_choices_to={'role': 'patient'})
+    profile = models.OneToOneField(Profile, on_delete=models.CASCADE)
     phone = models.CharField(max_length=15, blank=True)
 
     def __str__(self):
         return self.profile.user.username
+
 
 class Appointment(models.Model):
     STATUS_CHOICES = [
@@ -39,21 +48,21 @@ class Appointment(models.Model):
         ('Completed', 'Completed'),
         ('Cancelled', 'Cancelled'),
     ]
+
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
     date = models.DateField()
     time = models.TimeField()
     notes = models.TextField(blank=True)
-    status = models.CharField(
-        max_length=10,
-        choices=STATUS_CHOICES,
-        default='Pending'
-    )
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Pending')
     created_at = models.DateTimeField(default=timezone.now)
 
-    class Meta:
-        ordering = ['-created_at']
-
     def __str__(self):
-        return f"{self.patient.profile.user.username} with {self.doctor.profile.user.username} on {self.date} at {self.time} ({self.status})"
+        return f"{self.patient} with {self.doctor} on {self.date}"
 
+
+class Booking(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    created_at = models.DateTimeField(auto_now_add=True)
