@@ -58,7 +58,9 @@ class Appointment(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return f"{self.patient} with {self.doctor} on {self.date}"
+        patient = self.patient.profile.user.username if self.patient and self.patient.profile and self.patient.profile.user else "Unknown Patient"
+        doctor = self.doctor.profile.user.username if self.doctor and self.doctor.profile and self.doctor.profile.user else "Unknown Doctor"
+        return f"{patient} with {doctor} on {self.date}"
 
 
 class Booking(models.Model):
