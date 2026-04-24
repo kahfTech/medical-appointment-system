@@ -1,10 +1,13 @@
 from django.db import migrations
 
+from django.db import migrations
+
 def create_doctors(apps, schema_editor):
-    print("Doctor seeding migration completed. Total doctors:", Doctor.objects.count())
     User = apps.get_model('auth', 'User')
     Profile = apps.get_model('appointments', 'Profile')
     Doctor = apps.get_model('appointments', 'Doctor')
+
+    print("Doctor seeding migration completed. Total doctors:", Doctor.objects.count())
 
     doctors_data = [
         ("dr_smith", "Cardiologist"),
@@ -22,6 +25,7 @@ def create_doctors(apps, schema_editor):
     ]
 
     print("Starting doctor seeding migration...")
+
     for username, specialization in doctors_data:
 
         user, _ = User.objects.get_or_create(username=username)
@@ -38,8 +42,9 @@ def create_doctors(apps, schema_editor):
                 "availability": {}
             }
         )
-        print(f"Doctor {'created' if created else 'already exists'}: {username} ({specialization})")
 
+        print(f"Doctor {'created' if created else 'already exists'}: {username} ({specialization})")
+        
 def reverse_func(apps, schema_editor):
     User = apps.get_model('auth', 'User')
     Profile = apps.get_model('appointments', 'Profile')
