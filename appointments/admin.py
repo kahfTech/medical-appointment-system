@@ -40,7 +40,7 @@ class PatientAdmin(admin.ModelAdmin):
         return "No User"
 
     get_username.short_description = "Username"
-
+    
 @admin.register(Appointment)
 class AppointmentAdmin(admin.ModelAdmin):
     list_display = ('id', 'patient', 'doctor', 'date', 'time', 'status')
