@@ -12,10 +12,10 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-change-me-in-production!!'
 DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
 
 ALLOWED_HOSTS = [
-    "medical-appointment-system.onrender.com",
+    "medical-appointment-system-l6t3.onrender.com",
     "localhost",
     "127.0.0.1"
-]
+] 
 
 # APPS
 INSTALLED_APPS = [
@@ -121,7 +121,7 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://medical-appointment-system.onrender.com"
+    "https://medical-appointment-system-l6t3.onrender.com"
 ]
 
 # LOGGING
